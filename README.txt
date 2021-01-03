@@ -1,5 +1,6 @@
 Ethan's Randomized AutoClicker
 - Autoclicker with randomized delays to simulate human clicking
+- (CPS = clicks per second)
 
 *****IMPORTANT*****
 - The max cps is limited to 50 cps due to the nature of inaccuracies beyond 50 cps (it's not like you'll need it anyway) 
