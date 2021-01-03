@@ -1,12 +1,12 @@
 Ethan's Randomized AutoClicker
 - Autoclicker with randomized delays to simulate human clicking
-- (CPS = clicks per second)
+- (cps = clicks per second)
 
 *****IMPORTANT*****
 - The max cps is limited to 50 cps due to the nature of inaccuracies beyond 50 cps (it's not like you'll need it anyway) 
   Inputting any values higher than 50 will abort the program, also making the min cps higher than the max will also abort the program
 
-- The autoclicker will rarely reach the min and max clicks per second, but will almost always be within the range
+- The autoclicker will rarely reach the min and max cps, but will almost always be within the range
 
 - Refer to https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes if you want to rebind the hold and ON/OFF keys
   YOU MUST USE THE HEX VALUES e.g If you want to bind the control key, in options.txt you must put 0x11, not VK_CONTROL
