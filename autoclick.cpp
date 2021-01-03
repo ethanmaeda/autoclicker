@@ -8,56 +8,35 @@
 using namespace std;
 
 // Global variables
-UINT onoffkey{ 0x4F };
 UINT holdkey{ 0x47 };
-unsigned int flucfactor{10};
-unsigned int mincps{10};
-unsigned int maxcps{20};
-bool ON{ false };
+unsigned int avgdelay{70};
 
 int main() {
-	cout << "\nEthan's Randomized AutoClicker\n";
+	cout << "\nEthan's Personal Randomized AutoClicker\n";
 	cout << "---------------------------------------------------------------------\n\n";
 
 	sync_options();
 
-	cout << "ON/OFF key: ";
-	printkeyname(onoffkey);
-	cout << "\n";
 	cout << "Hold key: ";
 	printkeyname(holdkey);
 	cout << "\n";
-	cout << "Fluctuation factor (1-10): " << dec << flucfactor << "\n";
-	cout << "CPS range: " << mincps << "-" << maxcps << "\n\n";
+	cout << "Average delay between clicks: " << avgdelay << " milliseconds\n\n";
 	cout << "---------------------------------------------------------------------\n\n";
-	cout << "Press your ON/OFF key to turn the autoclicker on and off\n";
+	cout << "The program is now running\n";
 	cout << "Exit console to terminate the program\n";
 	cout << "---------------------------------------------------------------------\n\n";
 
-	unsigned int delay{ randomdelay(mincps, maxcps) };
+	unsigned int delay{ avgdelay };
 	unsigned int counter{};
 
-	while (true) {
-		if (GetAsyncKeyState(onoffkey) < 0) {
-			ON = true;
-			cout << "\rAutoClicker is ON ";
-			Sleep(200);
+	while (1) {
+		if (counter == 20) {
+			delay = randomdelay(avgdelay);
+			counter = 0;
 		}
-
-		while (ON) {
-			if (counter == flucfactor) {
-				delay = randomdelay(mincps, maxcps);
-				counter = 0;
-			}
-			if (GetAsyncKeyState(holdkey) < 0) {
-				click();
-				Sleep(delay);
-			}
-			if (GetAsyncKeyState(onoffkey) < 0) {
-				ON = false;
-				cout << "\rAutoClicker is OFF";
-				Sleep(200);
-			}
+		if (GetAsyncKeyState(holdkey) < 0) {
+			click();
+			Sleep(delay);
 			counter += 1;
 		}
 	}
@@ -69,8 +48,11 @@ void click() {
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 }
 
-unsigned int randomdelay(unsigned int mincps, unsigned int maxcps) {
-	return 1000/(rand() % (maxcps-mincps+1)+mincps);
+unsigned int randomdelay(unsigned int avgdelay) {
+	random_device rd;
+	mt19937 mt(rd());
+	uniform_int_distribution<unsigned int> dist(avgdelay-10, avgdelay+10);
+	return dist(mt);
 }
 
 void sync_options() {
@@ -80,7 +62,7 @@ void sync_options() {
 	if (file.is_open()) {
 		cout << "Options file loaded \n";
 		cout << "---------------------------------------------------------------------\n\n";
-		file >> hex >> onoffkey >> holdkey >> dec >> flucfactor >> mincps >> maxcps;
+		file >> hex >> holdkey >> dec >> avgdelay;
 		file.close();
 	}
 	else {
@@ -89,11 +71,8 @@ void sync_options() {
 		cout << "---------------------------------------------------------------------\n\n";
 	}
 
-	assert(onoffkey != 0);
 	assert(holdkey != 0);
-	assert(flucfactor >= 0 && flucfactor <= 10);
-	assert(mincps > 0 && mincps < 50 && mincps<=maxcps);
-	assert(maxcps < 50 && maxcps > 0 && maxcps>=mincps);
+	assert(avgdelay > 10);
 }
 
 void printkeyname(UINT keycode) {
