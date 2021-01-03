@@ -5,7 +5,7 @@
 
 int main();
 void click();
-unsigned int randomdelay(unsigned int mincps, unsigned int maxcps);
+unsigned int randomdelay(unsigned int avgdelay);
 void sync_options();
 void printkeyname(UINT keycode);
 
